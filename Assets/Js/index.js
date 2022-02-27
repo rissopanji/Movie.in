@@ -12,6 +12,7 @@ const showMovies = (URL, container) => {
       data.results.forEach((movie) => {
           const movieCard = new MovieCard(movie);
           container.appendChild(movieCard);
+          
       });
       updateContainer(container.parentElement.parentElement);
   });
