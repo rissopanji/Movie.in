@@ -22,6 +22,9 @@ class Navigation extends HTMLElement {
                         <li ><a href="#popular" class="active">Trending</a></li>
                         <li ><a href="#top_rated" class="active">Top Rated</a></li> 
                         <li ><a href="#upcoming" class="active">Upcoming</a></li> 
+                        <li > <form  id="form">
+                        <input type="text" placeholder="Search" id="search" class="search">
+                        </form></li>
                     </ul>  
           </nav>
     </div>
