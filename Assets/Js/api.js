@@ -11,6 +11,5 @@ const getMovies = async (URL) => {
   return data;
 };
 
-const searchURL = BASE_URL + '/search/movie?'+API_KEY;
-const IMG_URL = 'https://image.tmdb.org/t/p/w500';
+
 

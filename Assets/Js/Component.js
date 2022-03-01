@@ -22,9 +22,6 @@ class Navigation extends HTMLElement {
                         <li ><a href="#popular" class="active">Trending</a></li>
                         <li ><a href="#top_rated" class="active">Top Rated</a></li> 
                         <li ><a href="#upcoming" class="active">Upcoming</a></li> 
-                        <li > <form  id="form">
-                        <input type="text" placeholder="Search" id="search" class="search">
-                        </form></li>
                     </ul>  
           </nav>
     </div>
@@ -40,7 +37,7 @@ window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
   if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-    document.getElementById("navbar").style.backgroundColor = "rgb(12, 12, 12)";
+    document.getElementById("navbar").style.backgroundColor = "rgb(38, 38, 38)";
   
   } else {
     document.getElementById("navbar").style.backgroundColor = "transparent";
@@ -48,34 +45,26 @@ function scrollFunction() {
   }
 }
 
-//Fungsi Navbar 
 
-class Mainbanner extends HTMLElement {
-  constructor(movie) {
+class mainbanner extends HTMLElement {
+  constructor() {
       super();
+      this.setAttribute('class', 'mainbanner');
+
+      this.title = this.getAttribute('title');
+        
+
       this.innerHTML = `
-      <!--  Main Banner  -->
-      <section class="section main-banner" id="top">
-      <video autoplay muted loop id="bg-video">
-          <source src="assets/images/MainBanner _ Official Trailer.mp4" type="video/mp4" />
-      </video>
-    
-      <div class="video-overlay header-text">
-            <div class="caption">
-                <h6> ${this.title}</h6>
-                <div class="header-title">
-                  <h2>Doctor Strange</h2>
-                  <h4>in the Multiverse of Madness</h4>
-                </div>   
-                      <p>Journey into the unknown with Doctor Strange, who, with the help of mystical allies both old and new, traverses the mind-bending and dangerous alternate realities of the Multiverse to confront a mysterious new adversary.</p>
-                      <div class="main-button-red"><a href="#top">Visit</a></div>
-            </div>
+      <div class="main-banner">
+        <h3>Looking for Movies</h3>
+        <h1>Let's see out collection</h1>
       </div>
+
       `;
   }
 }
+customElements.define('main-banner', mainbanner);
 
-customElements.define('main-banner', Mainbanner);
 
 class MovieSection extends HTMLElement {
   constructor() {
@@ -83,7 +72,6 @@ class MovieSection extends HTMLElement {
       this.setAttribute('class', 'movieSection');
 
       this.title = this.getAttribute('title');
-      this.moreLink = this.getAttribute('more-link');
       this.movieTag = this.getAttribute('movie-tag');
 
       this.innerHTML = `
@@ -91,9 +79,7 @@ class MovieSection extends HTMLElement {
               <p class="title">
                   ${this.title}
               </p>
-              <a href="${this.moreLink}" class="more__link">
-                  <span>FIND MORE</span> <i class="fa-solid fa-angle-right"></i>
-              </a>
+
           </div>
           <div class="movie__container">
               <div class="scroll__button">
@@ -107,7 +93,6 @@ class MovieSection extends HTMLElement {
   }
 }
 customElements.define('movie-section', MovieSection);
-
 
 
 class MovieCard extends HTMLElement {
@@ -136,5 +121,147 @@ class MovieCard extends HTMLElement {
   }
 }
 customElements.define('movie-card', MovieCard);
+
+//Card Scroll
+
+const updateContainer = (root) => {
+  const movieContainer = root.querySelector('.movie__container');
+  const prev = movieContainer.querySelector('.scroll__button .prev');
+  const next = movieContainer.querySelector('.scroll__button .next');
+  const movieCards = movieContainer.querySelector('.movieContainer__card');
+  const cards = movieCards.querySelectorAll('.movie__card');
+
+  let containerWidth = movieContainer.clientWidth;
+
+  prev.classList.add('hide');
+  if (movieCards.scrollWidth <= containerWidth) {
+      prev.classList.add('hide');
+      next.classList.add('hide');
+  }
+
+  let iterator = Math.floor(containerWidth / cards.item(0).clientWidth) * 200;
+
+  window.addEventListener('resize', () => {
+      containerWidth = movieContainer.clientWidth;
+      iterator = Math.floor(containerWidth / cards.item(0).clientWidth) * 200;
+  });
+
+  prev.addEventListener('click', () => {
+      movieCards.scrollLeft -= iterator;
+
+      //  Check scroll offset for prev
+      if (movieCards.scrollLeft <= movieCards.offsetWidth) {
+          prev.classList.add('hide');
+      }
+      next.classList.remove('hide');
+  });
+
+  next.addEventListener('click', () => {
+      movieCards.scrollLeft += iterator;
+
+      // Check scroll offset for next
+      if (
+          Math.ceil(movieCards.offsetWidth + movieCards.scrollLeft) >=
+          movieCards.scrollWidth - movieCards.offsetWidth
+      ) {
+          next.classList.add('hide');
+      }
+      prev.classList.remove('hide');
+  });
+
+  movieCards.addEventListener('scroll', () => {
+      prev.classList.remove('hide');
+      next.classList.remove('hide');
+      if (
+          Math.ceil(movieCards.offsetWidth + movieCards.scrollLeft) >=
+          movieCards.scrollWidth
+      ) {
+          next.classList.add('hide');
+      }
+      if (movieCards.scrollLeft == 0) {
+          prev.classList.add('hide');
+      }
+  });
+  };
+
+class HeroMovieDetails extends HTMLElement {
+  constructor(movie) {
+      super();
+      this.innerHTML = `
+          <style>
+              .detail__bg {
+                  background-position: right -200px top;
+                  background-size: cover;
+                  background-repeat: no-repeat;
+              }
+          </style>
+          <div class="detail__bg">
+              <div class="bg__layer">
+                  <div class="detail__container">
+                      <div class="poster">
+                          <div class="poster__container">
+                              <img src="http://image.tmdb.org/t/p/w500${movie.poster_path}" alt="poster">
+                          </div>
+                      </div>
+                      <div class="details">
+                          <div class="header">
+                              <div class="header__title">
+                                  <span class="title">${movie.title}</span>
+                                  <span class="year">(2021)</span>
+                              </div>
+                              <div class="header__info">
+                                  13+
+                              </div>
+                          </div>
+                          <div class="rating">
+                            
+                              <span>${movie.vote_average}</span>
+                          </div>
+                          <div class="studio">
+                              <p>Studio</p>
+                          </div>
+                          <div class="overview">
+                              <h3>Overview</h3>
+                              <p>${movie.overview}</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      `;
+  }
+}
+customElements.define('details-hero', HeroMovieDetails);
+
+
+class Footer extends HTMLElement {
+  constructor() {
+      super();
+      this.innerHTML = `
+      <footer class="footer-distributed">
+			<div class="footer-right">
+				<a href="https://www.instagram.com/rissopanji_"><i class="fa fa-instagram"></i></a>
+				<a href="https://www.linkedin.com/in/rissopan-panji-prayogi"><i class="fa fa-linkedin"></i></a>
+				<a href="https://github.com/rissopanji"><i class="fa fa-github"></i></a>
+			</div>
+
+			<div class="footer-left">
+        <a href="#" >
+            <img src="Assets/icon/logo.png" alt="">
+        </a>
+        <div class="footerhide">
+            <p>
+                Rissopan Panji Prayogi
+            </p>
+            <h5>
+        ini footer
+        </h5>
+        </div>
+			</div>
+		</footer>
+      `;
+  }
+}
+customElements.define('foo-ter', Footer);
 
 
