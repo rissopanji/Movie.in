@@ -18,7 +18,7 @@ class Navigation extends HTMLElement {
                     </div>
                     <!-- Menu-->
                     <ul class="nav">
-                        <li ><a href="#" class="active">Home</a></li>
+                        <li ><a href="index.html" class="active">Home</a></li>
                         <li ><a href="#popular" class="active">Trending</a></li>
                         <li ><a href="#top_rated" class="active">Top Rated</a></li> 
                         <li ><a href="#upcoming" class="active">Upcoming</a></li> 
